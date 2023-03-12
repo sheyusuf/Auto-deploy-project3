@@ -203,46 +203,46 @@ jobs:
             - project/.circleci/ansible/inventory.txt
       # Here's where you may add some code to rollback on failures'''  
 
-  # configure-infrastructure:
-  #   docker:
-  #     - image: python:3.7-alpine3.11
-  #   steps:
-  #     - checkout
-  #     - add_ssh_keys:
-  #         fingerprints: ["de:27:ab:2f:f9:4b:b6:ae:51:39:8a:5b:b2:ec:a7:bb"]
+  configure-infrastructure:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["f5:91:c4:3d:dc:b4:70:34:03:4c:c4:90:ce:4d:6d:cd"]
 
-  #     - run:
-  #         name: Install dependencies
-  #         command: |
-  #           apk add --update ansible
-  #           apk add --update tar
-  #           apk add --update gzip
-  #     - attach_workspace:
-  #         at: ~/
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update ansible
+            apk add --update tar
+            apk add --update gzip
+      - attach_workspace:
+          at: ~/
 
-  #     - run:
-  #         name: configure server
-  #         command: |
-  #           echo NODE_ENV=production > ~/project/backend/.env
-  #           echo VERSION: "1" >> ~/project/backend/.env
-  #           echo TYPEORM_CONNECTION=$TYPEORM_CONNECTION >> ~/project/backend/.env
-  #           echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> ~/project/backend/.env
-  #           echo TYPEORM_ENTITIES=$TYPEORM_ENTITIES >> ~/project/backend/.env
-  #           echo TYPEORM_MIGRATIONS=$TYPEORM_MIGRATIONS >> ~/project/backend/.env
-  #           echo TYPEORM_MIGRATIONS_DIR=$TYPEORM_MIGRATIONS_DIR  >> ~/project/backend/.env
-  #           echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> ~/project/backend/.env
-  #           echo TYPEORM_PORT=$TYPEORM_PORT >> ~/project/backend/.env
-  #           echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> ~/project/backend/.env
-  #           echo TYPEORM_HOST=$TYPEORM_HOST >> ~/project/backend/.env
-  #           cat ~/project/backend/.env
-  #           cd .circleci/ansible
-  #           ansible-playbook -i inventory.txt configure-server.yml
-  #         no_output_timeout: 40m
+      - run:
+          name: configure server
+          command: |
+            echo NODE_ENV=production > ~/project/backend/.env
+            echo VERSION: "1" >> ~/project/backend/.env
+            echo TYPEORM_CONNECTION=$TYPEORM_CONNECTION >> ~/project/backend/.env
+            echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> ~/project/backend/.env
+            echo TYPEORM_ENTITIES=$TYPEORM_ENTITIES >> ~/project/backend/.env
+            echo TYPEORM_MIGRATIONS=$TYPEORM_MIGRATIONS >> ~/project/backend/.env
+            echo TYPEORM_MIGRATIONS_DIR=$TYPEORM_MIGRATIONS_DIR  >> ~/project/backend/.env
+            echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> ~/project/backend/.env
+            echo TYPEORM_PORT=$TYPEORM_PORT >> ~/project/backend/.env
+            echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> ~/project/backend/.env
+            echo TYPEORM_HOST=$TYPEORM_HOST >> ~/project/backend/.env
+            cat ~/project/backend/.env
+            cd .circleci/ansible
+            ansible-playbook -i inventory.txt configure-server.yml
+          no_output_timeout: 40m
 
-  #     - persist_to_workspace:
-  #         root: ~/
-  #         paths:
-  #           - project/backend/.env
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/backend/.env
   
   # run-migrations:
   #   docker:
@@ -478,8 +478,8 @@ workflows:
           filters:
             branches:
               only: [master]
-      # - configure-infrastructure:
-      #     requires: [deploy-infrastructure]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
       # - run-migrations:
       #     requires: [configure-infrastructure]
       # - deploy-frontend:
