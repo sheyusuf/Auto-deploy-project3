@@ -268,98 +268,98 @@ jobs:
                  curl https://kvdb.io/5ZwtPy5pTDQX98wQPDNTYS/migration_$\{CIRCLE_WORKFLOW_ID:0:7\}  -d '1'    
             fi    
 
-  # deploy-frontend:
-  #   docker:
-  #     - image: amazon/aws-cli
-  #   steps:
-  #     - checkout
-  #     - run:
-  #         name: Install dependencies
-  #         command: |
-  #           yum update -y && yum install -y sudo
-  #           sudo yum install -y gcc-c++ make
-  #           curl -sL https://rpm.nodesource.com/setup_16.x | sudo -E bash -
-  #           sudo yum install nodejs -y
-  #           yum install tar -y
-  #           yum install gzip -y
-  #           # Use n version manager to use Node.js v13.8.0
-  #           sudo npm install --global n
-  #           sudo n 13.8.0
-  #     - attach_workspace:
-  #         at: ~/
+  deploy-frontend:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            yum update -y && yum install -y sudo
+            sudo yum install -y gcc-c++ make
+            curl -sL https://rpm.nodesource.com/setup_16.x | sudo -E bash -
+            sudo yum install nodejs -y
+            yum install tar -y
+            yum install gzip -y
+            # Use n version manager to use Node.js v13.8.0
+            sudo npm install --global n
+            sudo n 13.8.0
+      - attach_workspace:
+          at: ~/
 
-  #     - run:
-  #         name: Get Backend Url
-  #         command: |
-  #           export BACKEND_IP=$(aws ec2 describe-instances \
-  #             --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-  #             --query 'Reservations[*].Instances[*].PublicIpAddress' \
-  #             --output text)
-  #           export API_URL="http://${BACKEND_IP}:3030"
-  #           echo "API_URL = ${API_URL}"
-  #           echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
-  #           cat frontend/.env
-  #     - run:
-  #         name: Deploy front-end object
-  #         command: |
-  #           cd frontend
-  #           npm install
-  #           npm run build
-  #           tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
-  #           aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
-  #     - destroy-environment:
-  #         workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - run:
+          name: Get Backend Url
+          command: |
+            export BACKEND_IP=$(aws ec2 describe-instances \
+              --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --output text)
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "API_URL = ${API_URL}"
+            echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
+            cat frontend/.env
+      - run:
+          name: Deploy front-end object
+          command: |
+            cd frontend
+            npm install
+            npm run build
+            tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
+            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
-  #     - revert-migrations:
-  #         workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - revert-migrations:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
   
-  # deploy-backend:
-  #   docker:
-  #     - image: cimg/base:stable
-  #   steps:
-  #     - checkout
-  #     - awscli
-  #     - ansible
-  #     - nodejs
-  #     - add_ssh_keys:
-  #         fingerprints: ["de:27:ab:2f:f9:4b:b6:ae:51:39:8a:5b:b2:ec:a7:bb"]
+  deploy-backend:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - awscli
+      - ansible
+      - nodejs
+      - add_ssh_keys:
+          fingerprints: ["f5:91:c4:3d:dc:b4:70:34:03:4c:c4:90:ce:4d:6d:cd"]
 
-  #     - attach_workspace:
-  #         at: ~/
-  #     - restore_cache:
-  #         keys: [backend-build]
+      - attach_workspace:
+          at: ~/
+      - restore_cache:
+          keys: [backend-build]
 
-  #     - run:
-  #         name: Install dependencies
-  #         command: |
-  #           cd backend
-  #           npm install
-  #           npm run build
-  #           cd ..
-  #     - run:
-  #         name: Package Backend
-  #         command: |
-  #           tar -C backend -czvf artifact.tar.gz .
-  #           cp artifact.tar.gz  ~/
-  #     - run:
-  #         name: Checking the existence of inventory.txt && artifact.tar.gz file
-  #         command: |
-  #           cd .circleci/ansible
-  #           echo "Contents  of the inventory.txt file is -------"
-  #           cat inventory.txt
-  #           echo "Contents of files folder is -------"
-  #           ls ~/
-  #     - run:
-  #         name: Deploy backend
-  #         command: |
-  #           cd .circleci/ansible
-  #           cat inventory.txt
-  #           ansible-playbook -i inventory.txt deploy-backend.yml
-  #     - destroy-environment:
-  #         workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - run:
+          name: Install dependencies
+          command: |
+            cd backend
+            npm install
+            npm run build
+            cd ..
+      - run:
+          name: Package Backend
+          command: |
+            tar -C backend -czvf artifact.tar.gz .
+            cp artifact.tar.gz  ~/
+      - run:
+          name: Checking the existence of inventory.txt && artifact.tar.gz file
+          command: |
+            cd .circleci/ansible
+            echo "Contents  of the inventory.txt file is -------"
+            cat inventory.txt
+            echo "Contents of files folder is -------"
+            ls ~/
+      - run:
+          name: Deploy backend
+          command: |
+            cd .circleci/ansible
+            cat inventory.txt
+            ansible-playbook -i inventory.txt deploy-backend.yml
+      - destroy-environment:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
-  #     - revert-migrations:
-  #         workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+      - revert-migrations:
+          workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
   # smoke-test:
   #   docker:
@@ -482,10 +482,10 @@ workflows:
           requires: [deploy-infrastructure]
       - run-migrations:
           requires: [configure-infrastructure]
-      # - deploy-frontend:
-      #     requires: [run-migrations]
-      # - deploy-backend:
-      #     requires: [run-migrations]
+      - deploy-frontend:
+          requires: [run-migrations]
+      - deploy-backend:
+          requires: [run-migrations]
       # - smoke-test:
       #     requires: [deploy-backend, deploy-frontend]
       # - cloudfront-update:
