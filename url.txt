@@ -2,9 +2,16 @@ https://github.com/sheyusuf/Auto-deploy-project3
 
 https://github.com/sheyusuf/Auto-deploy-project3
 
-http://udapeople-c3ab6a7.s3-website-us-east-1.amazonaws.com
+http://udapeople-5ebd3ab.s3-website-us-east-1.amazonaws.com
+
+http://udapeople-5ebd3ab.s3-website-us-east-1.amazonaws.com/#/employees/new
 
 dihsibx5oc5nm.cloudfront.net
 
+http://dihsibx5oc5nm.cloudfront.net/#/employees/new
+
+http://ec2-54-237-209-231.compute-1.amazonaws.com:3030/api/status
+
 shehu-prod.cjwmuirtdtmx.us-east-1.rds.amazonaws.com
+
 
