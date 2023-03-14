@@ -1,0 +1,10 @@
+https://github.com/sheyusuf/Auto-deploy-project3
+
+https://github.com/sheyusuf/Auto-deploy-project3
+
+http://udapeople-c3ab6a7.s3-website-us-east-1.amazonaws.com
+
+dihsibx5oc5nm.cloudfront.net
+
+shehu-prod.cjwmuirtdtmx.us-east-1.rds.amazonaws.com
+
