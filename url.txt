@@ -1,0 +1,13 @@
+https://github.com/sheyusuf/Auto-deploy-project3
+
+https://github.com/sheyusuf/Auto-deploy-project3
+
+http://udapeople-00776cf.s3-website-us-east-1.amazonaws.com/#/employees
+
+dihsibx5oc5nm.cloudfront.net
+
+http://dihsibx5oc5nm.cloudfront.net/#/employees/new
+
+http://ec2-54-237-209-231.compute-1.amazonaws.com:3030/api/status
+
+shehu-prod.cjwmuirtdtmx.us-east-1.rds.amazonaws.com
